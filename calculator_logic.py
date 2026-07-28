@@ -35,7 +35,7 @@ class CalcController:
 
 
     def button_clicked(self, e):
-        data = e if isinstance(e, str) else e.control.content
+        data = e.control.content
         print(f"Button clicked with data = {data}")
 
         if self.app.result.value == "Error" or data == "AC":
@@ -101,19 +101,49 @@ class CalcController:
         self.app.update()
 
     def handle_keyboard(self, e: ft.KeyboardEvent):
-        key = e.key
-        if key in (
+        key = e.key.lower().replace("numpad ", "")
+        print(f"Физическая клавиша нажата: {key} (Shift: {e.shift})") # Отладка
+
+        class FakeControl:
+            def __init__(self, content):
+                self.content = content
+
+        class FakeEvent:
+            def __init__(self, content):
+                self.control = FakeControl(content)
+
+        if e.shift:
+            if key == "5":
+                clean_key = "%"
+            elif key == "8":
+                clean_key = '*'
+            elif key == "=":
+                clean_key = "+"
+            else:
+                clean_key = key
+            print(f"Если нажата shift {key} меняем на {clean_key}")
+
+        else:
+            translations = {
+                "add": "+", "subtract": "-", "multiply": "*", "divide": "/", "decimal": "."
+            }
+            clean_key = translations.get(key, key)
+            print(f"Замена в словаре {key} на {clean_key}")
+
+        if clean_key in (
             "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-            ".", "+", "-", "*", "/", "%",
+            ".", "+", "-", "*", "/", "%"
         ):
-            self.button_clicked(key)
-        elif key in ("Enter", "="):
-            self.button_clicked("=")
-        elif key in ("Escape", "Delete"):
-            self.button_clicked("AC")
-        elif key == "Backspace":
+            self.button_clicked(FakeEvent(clean_key))
+
+        elif key in ("enter", "="):
+            self.button_clicked(FakeEvent("="))
+        elif key in ("ecape", "delete"):
+            self.button_clicked(FakeEvent("AC"))
+        elif key == "backspace":
             if self.app.result.value != "Error" and len(self.app.result.value) > 1:
                 self.app.result.value = self.app.result.value[:-1]
             else:
+                self.app.app.result.value = "0" if hasattr(self.app, 'app') else "0"
                 self.app.result.value = "0"
             self.app.update()

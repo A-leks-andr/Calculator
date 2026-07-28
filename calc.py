@@ -76,7 +76,12 @@ def main(page: ft.Page):
     page.window.resizable = False
     page.add(calc)
 
-    page.update()
+    focus_box = ft.TextField(width=0, height=0, opacity=0, autofocus=True)
+    page.add(focus_box)
 
+    page.on_keyboard_event = calc.logic.handle_keyboard
+
+    page.update()
+    focus_box.focus()
 
 ft.run(main)
