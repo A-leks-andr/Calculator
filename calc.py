@@ -1,4 +1,5 @@
 import flet as ft
+
 from calculator_logic import CalcController
 from class_button import ActionButton, DigitButton, ExtraActionButton
 
@@ -19,9 +20,15 @@ class CalculatorApp(ft.Container):
                 ft.Row(controls=[self.result], alignment=ft.MainAxisAlignment.END),
                 ft.Row(
                     controls=[
-                        ExtraActionButton(content="AC", on_click=self.logic.button_clicked),
-                        ExtraActionButton(content="+/-", on_click=self.logic.button_clicked),
-                        ExtraActionButton(content="%", on_click=self.logic.button_clicked),
+                        ExtraActionButton(
+                            content="AC", on_click=self.logic.button_clicked
+                        ),
+                        ExtraActionButton(
+                            content="+/-", on_click=self.logic.button_clicked
+                        ),
+                        ExtraActionButton(
+                            content="%", on_click=self.logic.button_clicked
+                        ),
                         ActionButton(content="/", on_click=self.logic.button_clicked),
                     ]
                 ),
@@ -83,5 +90,6 @@ def main(page: ft.Page):
 
     page.update()
     focus_box.focus()
+
 
 ft.run(main)

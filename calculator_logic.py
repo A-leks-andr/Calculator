@@ -3,22 +3,19 @@ import flet as ft
 
 class CalcController:
     def __init__(self, app):
-        self.app =  app
+        self.app = app
         self.reset()
-
 
     def reset(self):
         self.operator = "+"
         self.operand1 = 0
         self.new_operand = True
 
-
     def format_number(self, num):
         if num % 1 == 0:
             return int(num)
         else:
             return num
-
 
     def calculate(self, operand1, operand2, operator):
         if operator == "+":
@@ -32,7 +29,6 @@ class CalcController:
                 return "Error"
             else:
                 return self.format_number(operand1 / operand2)
-
 
     def button_clicked(self, e):
         data = e.control.content
@@ -102,7 +98,7 @@ class CalcController:
 
     def handle_keyboard(self, e: ft.KeyboardEvent):
         key = e.key.lower().replace("numpad ", "")
-        print(f"Физическая клавиша нажата: {key} (Shift: {e.shift})") # Отладка
+        print(f"Физическая клавиша нажата: {key} (Shift: {e.shift})")  # Отладка
 
         class FakeControl:
             def __init__(self, content):
@@ -116,7 +112,7 @@ class CalcController:
             if key == "5":
                 clean_key = "%"
             elif key == "8":
-                clean_key = '*'
+                clean_key = "*"
             elif key == "=":
                 clean_key = "+"
             else:
@@ -125,25 +121,42 @@ class CalcController:
 
         else:
             translations = {
-                "add": "+", "subtract": "-", "multiply": "*", "divide": "/", "decimal": "."
+                "add": "+",
+                "subtract": "-",
+                "multiply": "*",
+                "divide": "/",
+                "decimal": ".",
             }
             clean_key = translations.get(key, key)
-            print(f"Замена в словаре {key} на {clean_key}")
+            print(f"Замена в словаре {key} на {clean_key}")  # Отладка
 
         if clean_key in (
-            "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-            ".", "+", "-", "*", "/", "%"
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "0",
+            ".",
+            "+",
+            "-",
+            "*",
+            "/",
+            "%",
         ):
             self.button_clicked(FakeEvent(clean_key))
 
-        elif key in ("enter", "="):
+        elif clean_key in ("enter", "="):
             self.button_clicked(FakeEvent("="))
-        elif key in ("ecape", "delete"):
+        elif key in ("escape", "delete"):
             self.button_clicked(FakeEvent("AC"))
         elif key == "backspace":
             if self.app.result.value != "Error" and len(self.app.result.value) > 1:
                 self.app.result.value = self.app.result.value[:-1]
             else:
-                self.app.app.result.value = "0" if hasattr(self.app, 'app') else "0"
                 self.app.result.value = "0"
             self.app.update()
