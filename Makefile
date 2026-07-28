@@ -1,0 +1,23 @@
+# Переменные для удобства
+PYTHON = uv run python
+FLET = uv run flet
+
+.PHONY: run check format clean
+
+# Запуск калькулятора с автообновлением
+run:
+	$(FLET) run calc.py -r
+
+# Проверка кода линтером Ruff и исправление импортов
+check:
+	uv run ruff check . --fix
+
+# Форматирование кода по стандарту Ruff
+format:
+	uv run ruff format .
+
+# Очистка кэша
+clean:
+	@if exist __pycache__ rmdir /s /q __pycache__
+	@if exist .ruff_cache rmdir /s /q .ruff_cache
+	@echo Кэш успешно очищен!

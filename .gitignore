@@ -1,0 +1,12 @@
+.venv/
+venv
+pyvenv.cfg
+ENV
+Scripts/
+.idea/
+Lib/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+CACHEDIR.TAG
