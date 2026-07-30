@@ -10,3 +10,6 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 CACHEDIR.TAG
+build/
+dist/
+My Calculator.spec
