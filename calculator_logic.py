@@ -50,12 +50,16 @@ class CalcController:
             if self.operand1 == 0:
                 self.app.history.value = self.app.result.value
             else:
-                self.app.history.value = f"{self.format_number(self.operand1)} {self.operator} {self.app.result.value}"
+                self.app.history.value = (
+                    f"{self.format_number(self.operand1)} "
+                    f"{self.operator} "
+                    f"{self.app.result.value}"
+                )
 
         elif data in ("+", "-", "*", "/"):
             res = self.calculate(
-                    self.operand1, float(self.app.result.value), self.operator
-                )
+                self.operand1, float(self.app.result.value), self.operator
+            )
             self.app.result.value = str(res)
             self.operator = data
 
@@ -64,7 +68,9 @@ class CalcController:
                 self.app.history.value = ""
             else:
                 self.operand1 = float(self.app.result.value)
-                self.app.history.value = f"{self.format_number(self.operand1)} {self.operator}"
+                self.app.history.value = (
+                    f"{self.format_number(self.operand1)} {self.operator}"
+                )
             self.new_operand = True
 
         elif data in ("="):
@@ -77,8 +83,8 @@ class CalcController:
             op = self.operator
 
             res = self.calculate(
-                    self.operand1, float(self.app.result.value), self.operator
-                )
+                self.operand1, float(self.app.result.value), self.operator
+            )
             self.app.result.value = str(res)
 
             if self.app.result.value != "Error":
@@ -119,7 +125,9 @@ class CalcController:
 
                 # формируем history
                 if self.operand1 != 0 and op in ("+", "-", "*", "/"):
-                    self.app.history.value = f"{val1} {op} {val2}% = {self.app.result.value}"
+                    self.app.history.value = (
+                        f"{val1} {op} {val2}% = {self.app.result.value}"
+                    )
 
                 else:
                     # Если операции не было (просто ввели 10 и нажали %),
@@ -137,14 +145,18 @@ class CalcController:
                 self.app.history.value = self.app.result.value
 
             else:
-                self.app.history.value = f"{self.format_number(self.operand1)} {self.operator} {self.app.result.value}"
+                self.app.history.value = (
+                    f"{self.format_number(self.operand1)} "
+                    f"{self.operator} {self.app.result.value}"
+                )
 
             # Обновляем сам визуальный контейнер
         self.app.update()
 
     def handle_keyboard(self, e: ft.KeyboardEvent):
         key = e.key.lower().replace("numpad ", "")
-        print(f"Физическая клавиша нажата: {key} (Shift: {e.shift})")  # Отладка
+        # Отладка
+        print(f"Физическая клавиша нажата: {key} (Shift: {e.shift})")
 
         class FakeControl:
             def __init__(self, content):
@@ -163,6 +175,7 @@ class CalcController:
                 clean_key = "+"
             else:
                 clean_key = key
+            # Отладка
             print(f"Если нажата shift {key} меняем на {clean_key}")
 
         else:
@@ -174,7 +187,8 @@ class CalcController:
                 "decimal": ".",
             }
             clean_key = translations.get(key, key)
-            print(f"Замена в словаре {key} на {clean_key}")  # Отладка
+            # Отладка
+            print(f"Замена в словаре {key} на {clean_key}")
 
         if clean_key in (
             "1",
