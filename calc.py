@@ -13,10 +13,12 @@ class CalculatorApp(ft.Container):
         self.bgcolor = ft.Colors.BLACK
         self.border_radius = ft.BorderRadius.all(20)
         self.padding = 20
+        self.history = ft.Text(value="", color=ft.Colors.GREY_500, size=20)
         self.result = ft.Text(value="0", color=ft.Colors.WHITE, size=30)
 
         self.content = ft.Column(
             controls=[
+                ft.Row(controls=[self.history], alignment=ft.MainAxisAlignment.END),
                 ft.Row(controls=[self.result], alignment=ft.MainAxisAlignment.END),
                 ft.Row(
                     controls=[

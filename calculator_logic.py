@@ -36,6 +36,7 @@ class CalcController:
 
         if self.app.result.value == "Error" or data == "AC":
             self.app.result.value = "0"
+            self.app.history.value = ""
             self.reset()
 
         elif data in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."):
@@ -45,46 +46,85 @@ class CalcController:
             else:
                 self.app.result.value = self.app.result.value + data
 
+            # формирование history
+            if self.operand1 == 0:
+                self.app.history.value = self.app.result.value
+            else:
+                self.app.history.value = f"{self.format_number(self.operand1)} {self.operator} {self.app.result.value}"
+
         elif data in ("+", "-", "*", "/"):
-            self.app.result.value = str(
-                self.calculate(
+            res = self.calculate(
                     self.operand1, float(self.app.result.value), self.operator
                 )
-            )
+            self.app.result.value = str(res)
             self.operator = data
+
             if self.app.result.value == "Error":
                 self.operand1 = 0
+                self.app.history.value = ""
             else:
                 self.operand1 = float(self.app.result.value)
+                self.app.history.value = f"{self.format_number(self.operand1)} {self.operator}"
             self.new_operand = True
 
         elif data in ("="):
-            self.app.result.value = str(
-                self.calculate(
+            # Защита от нажатия знака = до ввода второго числа
+            if self.new_operand:
+                return
+
+            val1 = self.format_number(self.operand1)
+            val2 = self.app.result.value
+            op = self.operator
+
+            res = self.calculate(
                     self.operand1, float(self.app.result.value), self.operator
                 )
-            )
+            self.app.result.value = str(res)
+
+            if self.app.result.value != "Error":
+                self.app.history.value = f"{val1} {op} {val2} = {self.app.result.value}"
+
+            else:
+                self.app.history.value = ""
+
             self.reset()
 
         elif data in ("%"):
             current_value = float(self.app.result.value)
 
+            # запоминаем данные для history
+            val1 = self.format_number(self.operand1)
+            val2 = self.format_number(current_value)
+            op = self.operator
+
             if self.operand1 != 0 and self.operator in ("+", "-"):
                 val = self.operand1 / 100 * current_value
                 res = self.calculate(self.operand1, val, self.operator)
+
             elif self.operand1 != 0 and self.operator in ("*", "/"):
                 if self.operator == "/" and current_value == 0:
                     res = "Error"
                 else:
                     val = current_value / 100
                     res = self.calculate(self.operand1, val, self.operator)
+
             else:
                 res = current_value / 100
 
             if res == "Error":
                 self.app.result.value = "Error"
+                self.app.history.value = ""
             else:
                 self.app.result.value = str(self.format_number(res))
+
+                # формируем history
+                if self.operand1 != 0 and op in ("+", "-", "*", "/"):
+                    self.app.history.value = f"{val1} {op} {val2}% = {self.app.result.value}"
+
+                else:
+                    # Если операции не было (просто ввели 10 и нажали %),
+                    # выводим: 10% = 0.1
+                    self.app.history.value = f"{val2}% = {self.app.result.value}"
             self.reset()
 
         elif data in ("+/-"):
@@ -92,6 +132,12 @@ class CalcController:
                 return
             res = float(self.app.result.value) * -1
             self.app.result.value = str(self.format_number(res))
+
+            if self.operand1 == 0:
+                self.app.history.value = self.app.result.value
+
+            else:
+                self.app.history.value = f"{self.format_number(self.operand1)} {self.operator} {self.app.result.value}"
 
             # Обновляем сам визуальный контейнер
         self.app.update()
