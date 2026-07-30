@@ -20,4 +20,9 @@ format:
 clean:
 	@if exist __pycache__ rmdir /s /q __pycache__
 	@if exist .ruff_cache rmdir /s /q .ruff_cache
-	@echo Кэш успешно очищен!
+	@if exist build rmdir /s /q build
+	@echo Cache and build folders cleaned successfully!
+
+# Сборка калькулятора в exe.файл
+build:
+	uv run flet pack calc.py --name "My Calculator" --icon calc.ico
