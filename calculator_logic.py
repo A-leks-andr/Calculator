@@ -40,6 +40,9 @@ class CalcController:
             self.reset()
 
         elif data in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."):
+            # защита от добавления второй точки в число
+            if data == "." and "." in self.app.result.value and not self.new_operand:
+                return
             if self.app.result.value == "0" or self.new_operand:
                 self.app.result.value = data
                 self.new_operand = False

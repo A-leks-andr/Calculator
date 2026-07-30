@@ -1,6 +1,7 @@
 # Переменные для удобства
 PYTHON = uv run python
 FLET = uv run flet
+TESTS = uv run pytest tests/
 
 .PHONY: run check format clean
 
@@ -26,3 +27,11 @@ clean:
 # Сборка калькулятора в exe.файл
 build:
 	uv run flet pack calc.py --name "My Calculator" --icon calc.ico
+
+
+# Тесты
+test:
+	$(TESTS)
+
+cov:
+	uv run pytest --cov=calculator_logic tests/ --cov-report=term-missing
