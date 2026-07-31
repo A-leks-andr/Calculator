@@ -14,3 +14,4 @@ build/
 dist/
 My Calculator.spec
 .coverage
+coverage.xml

@@ -30,7 +30,7 @@ test:
 	$(TESTS)
 
 cov:
-	uv run pytest --cov=calculator_logic tests/ --cov-report=term-missing
+	uv run pytest --cov=calculator_logic tests/ --cov-report=term-missing --cov-report=xml
 
 # Сборка калькулятора в exe.файл
 build:
