@@ -1,7 +1,7 @@
 # 🧮 Flet Python Calculator
 
-![CI Status](https://github.com)
-![Code Coverage](https://shields.io)
+[![CI Status](https://github.com)](https://github.com)
+[![Code Coverage](https://shields.io)](https://github.com)
 
 Стильный кроссплатформенный калькулятор, написанный на Python с использованием фреймворка **Flet**. Проект спроектирован по модульному принципу (MVC) и адаптирован для десктопных операционных систем.
 
