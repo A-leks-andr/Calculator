@@ -1,5 +1,6 @@
 # 🧮 Flet Python Calculator
 
+### My tests and linter status:
 [![My check](https://github.com/A-leks-andr/Calculator/actions/workflows/ci.yml/badge.svg)](https://github.com/A-leks-andr/Calculator/actions)
 
 
