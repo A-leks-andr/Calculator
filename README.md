@@ -1,7 +1,11 @@
 # 🧮 Flet Python Calculator
 
-[![CI (Code Quality and Tests)](https://github.com)](https://github.com)
-![Code Coverage](https://shields.io)
+<p align="left">
+  <a href="https://github.com">
+    <img src="https://github.com/badge.svg" alt="CI Status">
+  </a>
+  <img src="https://shields.io" alt="Code Coverage">
+</p>
 
 Стильный кроссплатформенный калькулятор, написанный на Python с использованием фреймворка **Flet**. Проект спроектирован по модульному принципу (MVC) и адаптирован для десктопных операционных систем.
 
