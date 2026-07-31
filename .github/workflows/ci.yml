@@ -20,19 +20,16 @@ jobs:
 
       # 2. Устанавливаем современный пакетный менеджер uv (Astral)
       - name: Set up uv
-        uses: astral-sh/setup-env@v2
+        uses: astral-sh/setup-env@v5
         with:
-          version: "latest"
+          python-version: "3.14"
+          enable-cache: true
 
-      # 3. Устанавливаем Python нужной версии через uv
-      - name: Set up Python
-        run: uv python install 3.14
-
-      # 4. Синхронизируем и устанавливаем все зависимости (flet, pytest, ruff)
+      # 3. Синхронизируем и устанавливаем все зависимости (flet, pytest, ruff)
       - name: Install dependencies
         run: uv sync
 
-      # 5. Запускаем автоматическую проверку качества кода через ваш Makefile
+      # 4. Запускаем автоматическую проверку качества кода через ваш Makefile
       - name: Run Ruff Linter
         run: make check
 
