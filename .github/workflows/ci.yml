@@ -6,7 +6,7 @@ on:
   push:
     branches: [ "master", "main" ]
   pull_request:
-    branches: [ "master", "main" ]
+    types: [opened, synchronize, reopened]
 
 jobs:
   test_and_lint:
@@ -17,6 +17,8 @@ jobs:
       # 1. Скачиваем код репозитория на виртуальную машину
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # 2. Устанавливаем современный пакетный менеджер uv (Astral)
       - name: Set up uv
@@ -24,17 +26,24 @@ jobs:
         with:
           version: "latest"
 
+      # 3. Устанавливаем Python
       - name: Set up Python
         run: uv python install 3.14
 
-      # 3. Синхронизируем и устанавливаем все зависимости (flet, pytest, ruff)
+      # 4. Синхронизируем и устанавливаем все зависимости (flet, pytest, ruff)
       - name: Install dependencies
         run: uv sync
 
-      # 4. Запускаем автоматическую проверку качества кода через ваш Makefile
+      # 5. Проверяем качество кода линтером Ruff
       - name: Run Ruff Linter
         run: make check
 
-      # 6. Запускаем 17 тестов через Makefile
-      - name: Run Pytest Tests
-        run: make test
+      # 6. Запускаем тесты и генерируем файл coverage.xml прямо на сервере
+      - name: Run Pytest Tests with Coverage
+        run: make cov
+
+      # 7. Передаём сгенерированный coverage.xml в сканер SonarCloud
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
