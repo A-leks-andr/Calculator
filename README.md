@@ -2,6 +2,8 @@
 
 ### My tests and linter status:
 [![My check](https://github.com/A-leks-andr/Calculator/actions/workflows/ci.yml/badge.svg)](https://github.com/A-leks-andr/Calculator/actions)
+### SonarQube Coverage
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=A-leks-andr_Calculator&metric=coverage)](https://sonarcloud.io/summary/new_code?id=A-leks-andr_Calculator)
 
 
 
