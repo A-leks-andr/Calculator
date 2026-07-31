@@ -13,3 +13,4 @@ CACHEDIR.TAG
 build/
 dist/
 My Calculator.spec
+.coverage

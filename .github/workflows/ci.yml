@@ -1,0 +1,41 @@
+name: CI (Code Quality and Tests)
+
+# Настраиваем триггеры: запускать автоматику при каждом push или pull request
+# в ветку master
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  test_and_lint:
+    # Запускаем чистую виртуальную машину на базе Ubuntu Linux
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Скачиваем код репозитория на виртуальную машину
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Устанавливаем современный пакетный менеджер uv (Astral)
+      - name: Set up uv
+        uses: astral-sh/setup-env@v2
+        with:
+          version: "latest"
+
+      # 3. Устанавливаем Python нужной версии через uv
+      - name: Set up Python
+        run: uv python install 3.14
+
+      # 4. Синхронизируем и устанавливаем все зависимости (flet, pytest, ruff)
+      - name: Install dependencies
+        run: uv sync
+
+      # 5. Запускаем автоматическую проверку качества кода через ваш Makefile
+      - name: Run Ruff Linter
+        run: make check
+
+      # 6. Запускаем 17 тестов через Makefile
+      - name: Run Pytest Tests
+        run: make test

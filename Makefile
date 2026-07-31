@@ -5,6 +5,14 @@ TESTS = uv run pytest tests/
 
 .PHONY: run check format clean test build cov
 
+ifeq ($(OS),Windows_NT)
+	RM_CMD = @if exist $(1) rmdir /s /q $(1)
+	CLEAN_MSG = @echo Cache and build folders cleaned successfully!
+else
+	RM_CMD = @rm -rf $(1)
+	CLEAN_MSG = @echo "Cache and build folders cleaned successfully!"
+endif
+
 # Запуск калькулятора с автообновлением
 run:
 	$(FLET) run calc.py -r
@@ -17,21 +25,24 @@ check:
 format:
 	uv run ruff format .
 
-# Очистка кэша
-clean:
-	@if exist __pycache__ rmdir /s /q __pycache__
-	@if exist .ruff_cache rmdir /s /q .ruff_cache
-	@if exist build rmdir /s /q build
-	@echo Cache and build folders cleaned successfully!
-
-# Сборка калькулятора в exe.файл
-build:
-	uv run flet pack calc.py --name "My Calculator" --icon calc.ico
-
-
 # Тесты
 test:
 	$(TESTS)
 
 cov:
 	uv run pytest --cov=calculator_logic tests/ --cov-report=term-missing
+
+# Сборка калькулятора в exe.файл
+build:
+	uv run flet pack calc.py --name "My Calculator" --icon calc.ico
+
+# Очистка кэша
+clean:
+	$(call RM_CMD,__pycache__)
+	$(call RM_CMD,.ruff_cache)
+	$(call RM_CMD,build)
+	$(CLEAN_MSG)
+
+
+
+
