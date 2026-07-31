@@ -12,10 +12,13 @@ class CalcController:
         self.new_operand = True
 
     def format_number(self, num):
-        if num % 1 == 0:
-            return int(num)
-        else:
+        if isinstance(num, str):
             return num
+        rounded_num = round(num, 12)
+        if rounded_num % 1 == 0:
+            return int(rounded_num)
+        else:
+            return rounded_num
 
     def calculate(self, operand1, operand2, operator):
         if operator == "+":

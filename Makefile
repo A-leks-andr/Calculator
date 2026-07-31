@@ -3,7 +3,7 @@ PYTHON = uv run python
 FLET = uv run flet
 TESTS = uv run pytest tests/
 
-.PHONY: run check format clean
+.PHONY: run check format clean test build cov
 
 # Запуск калькулятора с автообновлением
 run:
