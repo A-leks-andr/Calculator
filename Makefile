@@ -2,6 +2,9 @@
 PYTHON = uv run python
 FLET = uv run flet
 TESTS = uv run pytest tests/
+export FLET_FLUTTER_SDK_ROOT = C:\flet_cache\flutter
+export PUB_CACHE = C:\flet_cache\pub
+export ANDROID_HOME =
 
 .PHONY: run check format clean test build cov
 
@@ -15,7 +18,7 @@ endif
 
 # Запуск калькулятора с автообновлением
 run:
-	$(FLET) run calc.py -r
+	$(FLET) run my_app/calc.py -r
 
 # Проверка кода линтером Ruff и исправление импортов
 check:
@@ -30,11 +33,17 @@ test:
 	$(TESTS)
 
 cov:
-	uv run pytest --cov=calculator_logic tests/ --cov-report=term-missing --cov-report=xml
+	uv run pytest --cov=my_app tests/ --cov-report=term-missing --cov-report=xml
 
 # Сборка калькулятора в exe.файл
 build:
-	uv run flet pack calc.py --name "My Calculator" --icon calc.ico
+	uv run flet pack my_app/calc.py --name "My Calculator" --icon calc.ico
+
+build-android:
+	uv run flet build apk my_app --project "My Calculator" --product "Calculator" --module-name calc
+
+build-ios:
+	uv run flet build ios --project "My Calculator" --product "Calculator"
 
 # Очистка кэша
 clean:

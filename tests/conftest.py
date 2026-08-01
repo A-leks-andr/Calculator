@@ -1,6 +1,6 @@
 import pytest
 
-from calculator_logic import CalcController
+from my_app.calculator_logic import CalcController
 
 
 class MockApp:

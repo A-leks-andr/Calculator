@@ -74,15 +74,23 @@ class CalculatorApp(ft.Container):
 def main(page: ft.Page):
     page.title = "Мой калькулятор"
 
+    page.adaptive = True
+
+    if page.platform in (
+        ft.PagePlatform.WINDOWS,
+        ft.PagePlatform.MACOS,
+        ft.PagePlatform.LINUX,
+    ):
+        page.window.width = 500
+        page.window.height = 410
+        page.window.resizable = False
+
     # Центрируем калькулятор внутри окна
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-    page.window.width = 500
-    page.window.height = 410
-
     calc = CalculatorApp()
-    page.window.resizable = False
+
     page.add(calc)
 
     focus_box = ft.TextField(width=0, height=0, opacity=0, autofocus=True)
