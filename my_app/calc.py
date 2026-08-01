@@ -1,5 +1,4 @@
 import flet as ft
-
 from calculator_logic import CalcController
 from class_button import ActionButton, DigitButton, ExtraActionButton
 

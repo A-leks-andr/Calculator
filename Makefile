@@ -33,17 +33,17 @@ test:
 	$(TESTS)
 
 cov:
-	uv run pytest --cov=my_app tests/ --cov-report=term-missing --cov-report=xml
+	uv run pytest --cov=my_app.calculator_logic tests/ --cov-report=term-missing --cov-report=xml
 
 # Сборка калькулятора в exe.файл
 build:
-	uv run flet pack my_app/calc.py --name "My Calculator" --icon calc.ico
+	uv run flet pack my_app --name "My Calculator" --icon calc.ico --module-name calc
 
 build-android:
 	uv run flet build apk my_app --project "My Calculator" --product "Calculator" --module-name calc
 
 build-ios:
-	uv run flet build ios --project "My Calculator" --product "Calculator"
+	uv run flet build ios my_app --project "My Calculator" --product "Calculator" --module-name calc
 
 # Очистка кэша
 clean:
