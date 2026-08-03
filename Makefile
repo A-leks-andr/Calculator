@@ -1,20 +1,16 @@
+# Глобальные переменные окружения для сборщика Android
+export FLET_FLUTTER_SDK_ROOT = C:\develop\flutter
+export ANDROID_HOME = C:\AndroidSDK
+export PUB_CACHE = C:\flet_cache\pub
+export GRADLE_USER_HOME = C:\flet_cache\gradle
+export ANDROID_USER_HOME = C:\flet_cache\android_user
+
 # Переменные для удобства
 PYTHON = uv run python
 FLET = uv run flet
 TESTS = uv run pytest tests/
-export FLET_FLUTTER_SDK_ROOT = C:\flet_cache\flutter
-export PUB_CACHE = C:\flet_cache\pub
-export ANDROID_HOME =
 
-.PHONY: run check format clean test build cov
-
-ifeq ($(OS),Windows_NT)
-	RM_CMD = @if exist $(1) rmdir /s /q $(1)
-	CLEAN_MSG = @echo Cache and build folders cleaned successfully!
-else
-	RM_CMD = @rm -rf $(1)
-	CLEAN_MSG = @echo "Cache and build folders cleaned successfully!"
-endif
+.PHONY: run check format clean test build build-android cov
 
 # Запуск калькулятора с автообновлением
 run:
@@ -37,19 +33,27 @@ cov:
 
 # Сборка калькулятора в exe.файл
 build:
-	uv run flet pack my_app --name "My Calculator" --icon calc.ico --module-name calc
+	$(FLET) pack my_app/calc.py --name "My Calculator" --icon my_app/calc.ico
 
 build-android:
-	uv run flet build apk my_app --project "My Calculator" --product "Calculator" --module-name calc
+	$(FLET) build apk my_app --project "My Calculator" --product "Calculator" --module-name calc --output ./build
 
 build-ios:
-	uv run flet build ios my_app --project "My Calculator" --product "Calculator" --module-name calc
+	$(FLET) build ios my_app --project "My Calculator" --product "Calculator" --module-name calc
+
+# Определяем ОС для команды очистки
+ifeq ($(OS),Windows_NT)
+    RM_CMD = @if exist $(1) rmdir /s /q $(1)
+    CLEAN_MSG = @echo Cache and folders cleaned successfully!
+else
+    RM_CMD = @rm -rf $(1)
+    CLEAN_MSG = @echo "Cache and folders cleaned successfully!"
+endif
 
 # Очистка кэша
 clean:
 	$(call RM_CMD,__pycache__)
 	$(call RM_CMD,.ruff_cache)
-	$(call RM_CMD,build)
 	$(CLEAN_MSG)
 
 
