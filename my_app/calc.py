@@ -8,7 +8,7 @@ class CalculatorApp(ft.Container):
     def init(self):
         self.logic = CalcController(self)
 
-        self.width = 450
+        self.width = 380
         self.bgcolor = ft.Colors.BLACK
         self.border_radius = ft.BorderRadius.all(20)
         self.padding = 20
@@ -31,7 +31,9 @@ class CalculatorApp(ft.Container):
                             content="%", on_click=self.logic.button_clicked
                         ),
                         ActionButton(content="/", on_click=self.logic.button_clicked),
-                    ]
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    spacing=8,
                 ),
                 ft.Row(
                     controls=[
@@ -39,7 +41,9 @@ class CalculatorApp(ft.Container):
                         DigitButton(content="8", on_click=self.logic.button_clicked),
                         DigitButton(content="9", on_click=self.logic.button_clicked),
                         ActionButton(content="*", on_click=self.logic.button_clicked),
-                    ]
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    spacing=8,
                 ),
                 ft.Row(
                     controls=[
@@ -47,7 +51,9 @@ class CalculatorApp(ft.Container):
                         DigitButton(content="5", on_click=self.logic.button_clicked),
                         DigitButton(content="6", on_click=self.logic.button_clicked),
                         ActionButton(content="-", on_click=self.logic.button_clicked),
-                    ]
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    spacing=8,
                 ),
                 ft.Row(
                     controls=[
@@ -55,33 +61,41 @@ class CalculatorApp(ft.Container):
                         DigitButton(content="2", on_click=self.logic.button_clicked),
                         DigitButton(content="3", on_click=self.logic.button_clicked),
                         ActionButton(content="+", on_click=self.logic.button_clicked),
-                    ]
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    spacing=8,
                 ),
                 ft.Row(
                     controls=[
-                        DigitButton(
-                            content="0", expand=2, on_click=self.logic.button_clicked
-                        ),
+                        DigitButton(content="0", on_click=self.logic.button_clicked),
                         DigitButton(content=".", on_click=self.logic.button_clicked),
+                        ExtraActionButton(
+                            content="⌫", on_click=self.logic.button_clicked
+                        ),
                         ActionButton(content="=", on_click=self.logic.button_clicked),
-                    ]
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    spacing=8,
                 ),
-            ]
+            ],
+            spacing=8,
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         )
 
 
 def main(page: ft.Page):
     page.title = "Мой калькулятор"
-
     page.adaptive = True
+    page.scroll = ft.ScrollMode.ADAPTIVE
 
     if page.platform in (
         ft.PagePlatform.WINDOWS,
         ft.PagePlatform.MACOS,
         ft.PagePlatform.LINUX,
     ):
-        page.window.width = 500
-        page.window.height = 410
+        page.window.width = 375
+        page.window.height = 590
         page.window.resizable = False
 
     # Центрируем калькулятор внутри окна
@@ -90,7 +104,8 @@ def main(page: ft.Page):
 
     calc = CalculatorApp()
 
-    page.add(calc)
+    safe_area = ft.SafeArea(content=calc, expand=True)
+    page.add(safe_area)
 
     focus_box = ft.TextField(width=0, height=0, opacity=0, autofocus=True)
     page.add(focus_box)

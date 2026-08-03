@@ -46,6 +46,8 @@ def test_error_handling_on_click(controller, fake_event):
     controller.app.result.value = "Error"
     controller.button_clicked(fake_event("5"))
     assert controller.app.result.value == "0"
+    controller.button_clicked(fake_event("+"))
+    assert controller.app.result.value == "0"
 
 
 def test_operator_chain_multiple(controller, fake_event):

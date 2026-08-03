@@ -7,7 +7,7 @@ class CalcController:
         self.reset()
 
     def reset(self):
-        self.operator = "+"
+        self.operator = ""
         self.operand1 = 0
         self.new_operand = True
 
@@ -35,50 +35,103 @@ class CalcController:
 
     def button_clicked(self, e):
         data = e.control.content
-        print(f"Button clicked with data = {data}")
 
+        # 1. Мгновенный сброс или очистка после ошибки
         if self.app.result.value == "Error" or data == "AC":
             self.app.result.value = "0"
             self.app.history.value = ""
             self.reset()
+            return
 
+        # 2. Обработка кнопки Backspace (⌫)
+        if data == "⌫":
+            # Защиты: сразу после знака действия или
+            # если второе число стёрто до "0"
+            if (self.operator and self.new_operand) or (
+                self.operator and self.app.result.value == "0"
+            ):
+                return
+
+            # Сценарий: стирание после знака равенства "="
+            if "=" in self.app.history.value:
+                self.app.result.value = self.app.result.value[:-1]
+
+                if not self.app.result.value or self.app.result.value == "0":
+                    self.app.result.value = "0"
+                    self.app.history.value = ""
+                else:
+                    self.app.history.value = self.app.result.value
+
+            elif self.app.result.value in ("Error", "0") or not self.app.result.value:
+                self.app.result.value = "0"
+                self.app.history.value = ""
+
+            else:
+                self.app.result.value = self.app.result.value[:-1]
+
+                if not self.app.result.value:
+                    self.app.result.value = "0"
+
+                    if self.operator:
+                        self.app.history.value = (
+                            f"{self.format_number(self.operand1)} "
+                            f"{self.operator} {self.app.result.value}"
+                        )
+                    else:
+                        self.app.history.value = self.app.result.value
+
+        # 3. Обработка ввода цифр и точки
         elif data in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."):
             # защита от добавления второй точки в число
             if data == "." and "." in self.app.result.value and not self.new_operand:
                 return
+
             if self.app.result.value == "0" or self.new_operand:
-                self.app.result.value = data
+                self.app.result.value = "0." if data == "." else data
                 self.new_operand = False
             else:
-                self.app.result.value = self.app.result.value + data
+                self.app.result.value += data
 
-            # формирование history
-            if self.operand1 == 0:
-                self.app.history.value = self.app.result.value
-            else:
+            # Формирование истории
+            if self.operator:
                 self.app.history.value = (
                     f"{self.format_number(self.operand1)} "
-                    f"{self.operator} "
-                    f"{self.app.result.value}"
+                    f"{self.operator} {self.app.result.value}"
                 )
 
-        elif data in ("+", "-", "*", "/"):
-            res = self.calculate(
-                self.operand1, float(self.app.result.value), self.operator
-            )
-            self.app.result.value = str(res)
-            self.operator = data
+            else:
+                self.app.history.value = self.app.result.value
 
-            if self.app.result.value == "Error":
-                self.operand1 = 0
-                self.app.history.value = ""
+        # 4. Обработка математических знаков
+        elif data in ("+", "-", "*", "/"):
+            # Защита от деления нуля
+            if self.app.result.value == "0" and data == "/":
+                return
+
+            if self.operator:
+                res = self.calculate(
+                    self.operand1, float(self.app.result.value), self.operator
+                )
+                self.app.result.value = str(res)
+
+                if self.app.result.value == "Error":
+                    self.app.history.value = ""
+                    self.reset()
+                    return
+
+                else:
+                    self.operand1 = float(self.app.result.value)
+
             else:
                 self.operand1 = float(self.app.result.value)
-                self.app.history.value = (
-                    f"{self.format_number(self.operand1)} {self.operator}"
-                )
+
+            self.operator = data
+            self.app.history.value = (
+                f"{self.format_number(self.operand1)} {self.operator}"
+            )
             self.new_operand = True
 
+        # 5. Обработка знака равенства (=)
         elif data in ("="):
             # Защита от нажатия знака = до ввода второго числа
             if self.new_operand:
@@ -101,10 +154,9 @@ class CalcController:
 
             self.reset()
 
+        # 6. Обработка процентов (%)
         elif data in ("%"):
             current_value = float(self.app.result.value)
-
-            # запоминаем данные для history
             val1 = self.format_number(self.operand1)
             val2 = self.format_number(current_value)
             op = self.operator
@@ -117,9 +169,9 @@ class CalcController:
                 if self.operator == "/" and current_value == 0:
                     res = "Error"
                 else:
-                    val = current_value / 100
-                    res = self.calculate(self.operand1, val, self.operator)
-
+                    res = self.calculate(
+                        self.operand1, current_value / 100, self.operator
+                    )
             else:
                 res = current_value / 100
 
@@ -134,29 +186,28 @@ class CalcController:
                     self.app.history.value = (
                         f"{val1} {op} {val2}% = {self.app.result.value}"
                     )
-
                 else:
                     # Если операции не было (просто ввели 10 и нажали %),
                     # выводим: 10% = 0.1
                     self.app.history.value = f"{val2}% = {self.app.result.value}"
             self.reset()
 
+        # 7. Обработка смены знака (+/-)
         elif data in ("+/-"):
             if self.app.result.value == "0":
                 return
             res = float(self.app.result.value) * -1
             self.app.result.value = str(self.format_number(res))
+            self.new_operand = False
 
-            if self.operand1 == 0:
-                self.app.history.value = self.app.result.value
-
-            else:
+            if self.operator:
                 self.app.history.value = (
                     f"{self.format_number(self.operand1)} "
                     f"{self.operator} {self.app.result.value}"
                 )
+            else:
+                self.app.history.value = self.app.result.value
 
-            # Обновляем сам визуальный контейнер
         self.app.update()
 
     def handle_keyboard(self, e: ft.KeyboardEvent):
@@ -221,8 +272,4 @@ class CalcController:
         elif key in ("escape", "delete"):
             self.button_clicked(FakeEvent("AC"))
         elif key == "backspace":
-            if self.app.result.value != "Error" and len(self.app.result.value) > 1:
-                self.app.result.value = self.app.result.value[:-1]
-            else:
-                self.app.result.value = "0"
-            self.app.update()
+            self.button_clicked(FakeEvent("⌫"))
