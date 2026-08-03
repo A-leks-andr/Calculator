@@ -36,7 +36,7 @@ build:
 	$(FLET) pack my_app/calc.py --name "My Calculator" --icon my_app/calc.ico
 
 build-android:
-	$(FLET) build apk my_app --project "My Calculator" --product "Calculator" --module-name calc --output ./build
+	$(FLET) build apk my_app --project "My Calculator" --product "Calculator" --module-name calc --output ../build --icon mu_ap/calc.png
 
 build-ios:
 	$(FLET) build ios my_app --project "My Calculator" --product "Calculator" --module-name calc

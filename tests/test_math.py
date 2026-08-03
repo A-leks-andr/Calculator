@@ -21,11 +21,13 @@ def test_backspace_logic(controller, fake_event):
     # Передаем символ ⌫ через вашу встроенную фабрику fake_event
     controller.button_clicked(fake_event("⌫"))
     assert controller.app.result.value == "12"
+    assert controller.app.history.value == "12"
 
     # Сценарий 2: Стираем последнюю цифру (должен вернуться "0")
     controller.app.result.value = "7"
     controller.button_clicked(fake_event("⌫"))
     assert controller.app.result.value == "0"
+    assert controller.app.history.value == "0"
 
     # Сценарий 3: Нажатие Backspace, если на экране уже горит "0" или "Ошибка"
     controller.app.result.value = "0"

@@ -8,12 +8,13 @@ class CalculatorApp(ft.Container):
     def init(self):
         self.logic = CalcController(self)
 
-        self.width = 380
+        self.max_width = 350
+        self.width = None
         self.bgcolor = ft.Colors.BLACK
         self.border_radius = ft.BorderRadius.all(20)
         self.padding = 20
-        self.history = ft.Text(value="", color=ft.Colors.GREY_500, size=20)
-        self.result = ft.Text(value="0", color=ft.Colors.WHITE, size=30)
+        self.history = ft.Text(value="", color=ft.Colors.GREY_500, size=18)
+        self.result = ft.Text(value="0", color=ft.Colors.WHITE, size=28)
 
         self.content = ft.Column(
             controls=[
@@ -95,7 +96,7 @@ def main(page: ft.Page):
         ft.PagePlatform.LINUX,
     ):
         page.window.width = 375
-        page.window.height = 590
+        page.window.height = 580
         page.window.resizable = False
 
     # Центрируем калькулятор внутри окна

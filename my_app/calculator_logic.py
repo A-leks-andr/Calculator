@@ -72,13 +72,13 @@ class CalcController:
                 if not self.app.result.value:
                     self.app.result.value = "0"
 
-                    if self.operator:
-                        self.app.history.value = (
-                            f"{self.format_number(self.operand1)} "
-                            f"{self.operator} {self.app.result.value}"
-                        )
-                    else:
-                        self.app.history.value = self.app.result.value
+                if self.operator:
+                    self.app.history.value = (
+                        f"{self.format_number(self.operand1)} "
+                        f"{self.operator} {self.app.result.value}"
+                    )
+                else:
+                    self.app.history.value = self.app.result.value
 
         # 3. Обработка ввода цифр и точки
         elif data in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."):
