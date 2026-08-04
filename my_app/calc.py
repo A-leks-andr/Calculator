@@ -100,6 +100,14 @@ def main(page: ft.Page):
     page.adaptive = True
     page.scroll = ft.ScrollMode.ADAPTIVE
     page.padding = 0
+    if page.platform in (
+        ft.PagePlatform.WINDOWS,
+        ft.PagePlatform.MACOS,
+        ft.PagePlatform.LINUX,
+    ):
+        page.window.width = 330
+        page.window.height = 510
+        page.window.resizable = False
 
     # Центрируем калькулятор внутри окна
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
