@@ -8,8 +8,6 @@ class CalculatorApp(ft.Container):
     def init(self):
         self.logic = CalcController(self)
 
-        self.max_width = 350
-        self.width = None
         self.bgcolor = ft.Colors.BLACK
         self.border_radius = ft.BorderRadius.all(20)
         self.padding = 20
@@ -41,7 +39,17 @@ class CalculatorApp(ft.Container):
                         DigitButton(content="7", on_click=self.logic.button_clicked),
                         DigitButton(content="8", on_click=self.logic.button_clicked),
                         DigitButton(content="9", on_click=self.logic.button_clicked),
-                        ActionButton(content="*", on_click=self.logic.button_clicked),
+                        ActionButton(
+                            content="✕",
+                            on_click=self.logic.button_clicked,
+                            style=ft.ButtonStyle(
+                                text_style=ft.TextStyle(
+                                    size=20, weight=ft.FontWeight.W_100
+                                ),
+                                padding=0,
+                                alignment=ft.Alignment.CENTER,
+                            ),
+                        ),
                     ],
                     alignment=ft.MainAxisAlignment.CENTER,
                     spacing=8,
@@ -82,22 +90,16 @@ class CalculatorApp(ft.Container):
             spacing=8,
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            width=300,
         )
+        self.width = self.content.width
 
 
 def main(page: ft.Page):
     page.title = "Мой калькулятор"
     page.adaptive = True
     page.scroll = ft.ScrollMode.ADAPTIVE
-
-    if page.platform in (
-        ft.PagePlatform.WINDOWS,
-        ft.PagePlatform.MACOS,
-        ft.PagePlatform.LINUX,
-    ):
-        page.window.width = 375
-        page.window.height = 580
-        page.window.resizable = False
+    page.padding = 0
 
     # Центрируем калькулятор внутри окна
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
@@ -105,7 +107,7 @@ def main(page: ft.Page):
 
     calc = CalculatorApp()
 
-    safe_area = ft.SafeArea(content=calc, expand=True)
+    safe_area = ft.SafeArea(content=calc)
     page.add(safe_area)
 
     focus_box = ft.TextField(width=0, height=0, opacity=0, autofocus=True)

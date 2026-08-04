@@ -25,7 +25,7 @@ class CalcController:
             return self.format_number(operand1 + operand2)
         elif operator == "-":
             return self.format_number(operand1 - operand2)
-        elif operator == "*":
+        elif operator == "✕":
             return self.format_number(operand1 * operand2)
         elif operator == "/":
             if operand2 == 0:
@@ -103,7 +103,7 @@ class CalcController:
                 self.app.history.value = self.app.result.value
 
         # 4. Обработка математических знаков
-        elif data in ("+", "-", "*", "/"):
+        elif data in ("+", "-", "✕", "/"):
             # Защита от деления нуля
             if self.app.result.value == "0" and data == "/":
                 return
@@ -165,7 +165,7 @@ class CalcController:
                 val = self.operand1 / 100 * current_value
                 res = self.calculate(self.operand1, val, self.operator)
 
-            elif self.operand1 != 0 and self.operator in ("*", "/"):
+            elif self.operand1 != 0 and self.operator in ("✕", "/"):
                 if self.operator == "/" and current_value == 0:
                     res = "Error"
                 else:
@@ -182,7 +182,7 @@ class CalcController:
                 self.app.result.value = str(self.format_number(res))
 
                 # формируем history
-                if self.operand1 != 0 and op in ("+", "-", "*", "/"):
+                if self.operand1 != 0 and op in ("+", "-", "✕", "/"):
                     self.app.history.value = (
                         f"{val1} {op} {val2}% = {self.app.result.value}"
                     )
@@ -227,7 +227,7 @@ class CalcController:
             if key == "5":
                 clean_key = "%"
             elif key == "8":
-                clean_key = "*"
+                clean_key = "✕"
             elif key == "=":
                 clean_key = "+"
             else:
@@ -239,9 +239,10 @@ class CalcController:
             translations = {
                 "add": "+",
                 "subtract": "-",
-                "multiply": "*",
+                "multiply": "✕",
                 "divide": "/",
                 "decimal": ".",
+                "*": "✕",
             }
             clean_key = translations.get(key, key)
             # Отладка
@@ -261,7 +262,7 @@ class CalcController:
             ".",
             "+",
             "-",
-            "*",
+            "✕",
             "/",
             "%",
         ):

@@ -10,11 +10,15 @@ PYTHON = uv run python
 FLET = uv run flet
 TESTS = uv run pytest tests/
 
-.PHONY: run check format clean test build build-android cov
+.PHONY: run check format clean test build build-android cov web_run
 
 # Запуск калькулятора с автообновлением
 run:
 	$(FLET) run my_app/calc.py -r
+
+# WEB-режим
+web_run:
+	$(FLET) run my_app/calc.py --web
 
 # Проверка кода линтером Ruff и исправление импортов
 check:
@@ -33,10 +37,10 @@ cov:
 
 # Сборка калькулятора в exe.файл
 build:
-	$(FLET) pack my_app/calc.py --name "My Calculator" --icon my_app/calc.ico
+	$(FLET) pack my_app/calc.py --name "My Calculator" --icon my_app/icon.ico
 
 build-android:
-	$(FLET) build apk my_app --project "My Calculator" --product "Calculator" --module-name calc --output ../build --icon mu_ap/calc.png
+	$(FLET) build apk my_app --project "My Calculator" --product "Calculator" --module-name calc --output ./build
 
 build-ios:
 	$(FLET) build ios my_app --project "My Calculator" --product "Calculator" --module-name calc

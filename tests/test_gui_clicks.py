@@ -50,6 +50,22 @@ def test_error_handling_on_click(controller, fake_event):
     assert controller.app.result.value == "0"
 
 
+def test_system_state_after_an_error(controller, fake_event):
+    controller.operand1 = 5.0
+    controller.operator = "/"
+    controller.app.result.value = "0.0"
+    controller.app.history.value = "5 / 0.0"
+    controller.new_operand = False
+
+    controller.button_clicked(fake_event("+"))
+
+    assert controller.app.result.value == "Error"
+    assert controller.app.history.value == ""
+    assert controller.operator == ""
+    assert controller.operand1 == 0
+    assert controller.new_operand is True
+
+
 def test_operator_chain_multiple(controller, fake_event):
     """Тест длинной цепочки без кнопки Равно: 5 + 6 + 7 = 18"""
     controller.button_clicked(fake_event("5"))

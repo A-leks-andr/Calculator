@@ -5,14 +5,14 @@ import flet as ft
 
 @ft.control
 class CalcButton(ft.Button):
-    width: int = field(default_factory=lambda: 70)
-    height: int = field(default_factory=lambda: 70)
+    width: int = field(default_factory=lambda: 60)
+    height: int = field(default_factory=lambda: 60)
 
     style: ft.ButtonStyle = field(
         default_factory=lambda: ft.ButtonStyle(
             text_style=ft.TextStyle(size=16, weight=ft.FontWeight.BOLD),
             shape=ft.CircleBorder(),
-            padding=5,
+            padding=0,
         )
     )
 
